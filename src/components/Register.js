@@ -42,12 +42,11 @@ const Register = () => {
 							 type="password"
 							 className="register__input"
 							 placeholder="Пароль"/>
-				<button className="register__submit">Войти</button>
+				<button className="register__submit">Зарегистрироваться</button>
 				<p className="register__undertext">Уже зарегистрированы? Войти</p>
 			</form>
 		</div>
 	)
-
 }
 
 export default Register
