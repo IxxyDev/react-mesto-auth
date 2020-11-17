@@ -1,0 +1,13 @@
+.popup__form {
+    margin-top: 60px;
+}
+
+.popup_type_delete-card .popup__form {
+    margin-top: 20px;
+}
+
+@media screen and (max-width: 477px) {
+    .popup__form {
+        margin-top: 36px;
+    }
+}
