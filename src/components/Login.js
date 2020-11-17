@@ -39,11 +39,17 @@ const Login = ({handleLogin}) => {
 	}
 
 	return (
-		<div onSubmit={handleSubmit} className="login">
-			<h2 className="login__heading">Авторизация</h2>
-			<form className="login__form">
-				<input type="email" className="login__input" placeholder="Email"/>
-				<input type="password" className="login__input" placeholder="Пароль"/>
+		<div className="login">
+			<h2 className="login__heading">Вход</h2>
+			<form onSubmit={handleSubmit} className="login__form">
+				<input onChange={handleChange}
+							 type="email"
+							 className="login__input"
+							 placeholder="Email"/>
+				<input onChange={handleChange}
+							 type="password"
+							 className="login__input"
+							 placeholder="Пароль"/>
 				<button className="login__submit">Войти</button>
 			</form>
 		</div>
