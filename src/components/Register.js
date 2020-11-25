@@ -1,14 +1,12 @@
 import React, {useState} from 'react'
-import {useHistory} from 'react-router-dom'
-import * as auth from '../utils/auth'
+import {Link} from "react-router-dom";
 
 
-const Register = () => {
+const Register = ({onRegister}) => {
 	const [data, setData] = useState({
 		email: '',
 		password: ''
 	})
-	const history = useHistory()
 
 	const handleChange = (e) => {
 		const {name, value} = e.target
@@ -17,33 +15,33 @@ const Register = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		const {email, password} = data
-		if (email && password) {
-			auth.register(email, password)
-				.then(res => {
-					if (res.statusCode !== 400) {
-						history.push('/signin')
-					} else {
-						console.error("Error")
-					}
-				})
-		}
+		onRegister(data)
+		setData({
+			email: '',
+			password: ''
+		})
 	}
 
 	return (
-		<div className="register">
-			<h2 className="register__heading">Регистрация</h2>
-			<form onSubmit={handleSubmit} className="register__form">
+		<div className="auth">
+			<h2 className="auth__heading">Регистрация</h2>
+			<form onSubmit={handleSubmit} className="auth__form">
 				<input onChange={handleChange}
+							 name="email"
 							 type="email"
-							 className="register__input"
-							 placeholder="Email"/>
+							 className="auth__input"
+							 required
+							 placeholder="Email"
+							 value={data.email}/>
 				<input onChange={handleChange}
+							 name="password"
 							 type="password"
-							 className="register__input"
-							 placeholder="Пароль"/>
-				<button className="register__submit">Зарегистрироваться</button>
-				<p className="register__undertext">Уже зарегистрированы? Войти</p>
+							 className="auth__input"
+							 required
+							 placeholder="Пароль"
+							 value={data.password}/>
+				<button className="auth__submit">Зарегистрироваться</button>
+				<Link to="login" className="auth__link">Уже зарегистрированы? Войти</Link>
 			</form>
 		</div>
 	)
