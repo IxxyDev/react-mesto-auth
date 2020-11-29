@@ -8,7 +8,6 @@ const Header = ({loggedIn, onLogout}) => {
   const location = useLocation()
   const title = `${location.pathname === "/signup" ? "Войти" : "Регистрация" }`
   const path = `${location.pathname === "/signup" ? "singin" : "singup" }`
-  console.log(currentUser)
 
   return (
     <header className="header">

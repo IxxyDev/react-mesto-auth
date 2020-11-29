@@ -1,27 +1,28 @@
-import React from "react"
-import classnames from 'classnames'
-import {infoForTooltip} from "../utils/infoForToolTip";
+import React, {useState} from 'react'
+import '../blocks/popup/popup.css'
+import cn from 'classnames'
+import okImage from '../images/okImage.svg'
+import errorImage from  '../images/errorImage.svg'
 
-const InfoTooltip = ({isOpened, onClose, outcome}) => {
-	const tooltipClasses = classnames({
-		tooltip: true,
-		tooltip_disable: !isOpened
-	})
-	const {image, imageAlt, title} = infoForTooltip(outcome)
+const InfoToolTip = () => {
+	const success = <><img className="popup__tooltip-image" src={okImage} alt="Галочка успеха"/><span className="popup__tooltip-text">Вы успешно зарегистрировались!</span></>
+	const fail = <><img className="popup__tooltip-image" src={errorImage} alt="Крестик неудачи"/><span className="popup__tooltip-text">Что-то пошло не так! Попробуйте еще раз.</span></>
+
+
+	const [opened, setOpened] = useState(true)
+
+	const handleClose = () => {
+		setOpened(false)
+	}
 
 	return (
-		<section className={tooltipClasses}>
-			<div className="tooltip__container">
-				<button
-					label="Закрыть"
-					className="tooltip__button"
-					onClick={onClose}
-				/>
-				<img src={image} alt={imageAlt} className="tooltip_image"/>
-				<h2 className="tooltip__title">{title}</h2>
+		<div className={cn("popup", opened && "popup_is-opened")}>
+			<div className="popup__content popup__content_type_tooltip">
+				<button onClick={handleClose} className="popup__close-button" />
+				{success}
 			</div>
-		</section>
-	)
+		</div>
+		)
 }
 
-export default InfoTooltip
+export default InfoToolTip

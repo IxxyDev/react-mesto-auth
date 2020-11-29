@@ -11,6 +11,9 @@
 @import url(./__zoom-image/popup__zoom-image.css);
 @import url(./__input-error/popup__input-error.css);
 @import url(./__input-error/popup__input-error_active.css);
+@import url(./__tooltip-text/popup__tooltip-text.css);
+@import url(./__content/_type/popup__content_type_tooltip.css);
+@import url(./__tooltip-image/popup__tooltip-image.css);
 
 .popup {
     position: fixed;

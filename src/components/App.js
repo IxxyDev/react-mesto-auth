@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Route, useHistory} from 'react-router-dom'
 import * as auth from '../utils/auth'
 import '../index.css';
@@ -12,7 +12,7 @@ import AddPlacePopup from './AddPlacePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import { api } from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import {getToken} from "../utils/token";
+import {getToken, removeToken, setToken} from "../utils/token";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
@@ -21,6 +21,7 @@ import InfoTooltip from "./InfoTooltip";
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false)
+  const [registered, setRegistered] = useState(false)
   const [userData, setUserData] = useState({email: '', password: ''})
   const [isEditProfilePopupOpen, setEditProfilePopup] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopup] = useState(false);
@@ -32,6 +33,7 @@ const App = () => {
     link: '',
     name: ''
   });
+  const [userEmail, setUserEmail] = useState('')
   const history = useHistory()
 
   React.useEffect(() => {
@@ -46,18 +48,13 @@ const App = () => {
           console.log(err);
         });
     }
-  }, []);
+  }, [loggedIn]);
 
-  const handleLogin = () => {
-    setUserData(userData)
-    setLoggedIn(true)
-  }
+  //const handleSetUserEmail = useCallback(email => setUserEmail(email), [])
 
   const tokenCheck = () => {
     const jwt = getToken()
-
     if (!jwt) return
-
     auth.getContent(jwt).then(res => {
       if (res) {
         const userData = {
@@ -70,6 +67,12 @@ const App = () => {
       }
     })
   }
+
+  const handleLogin = userData => {
+    setUserData(userData)
+    setLoggedIn(true)
+  }
+
 
   const handleLikeCard = card => {
     const isLiked = card.likes.some(owner => owner._id === currentUser._id);
@@ -141,10 +144,17 @@ const App = () => {
     setSelectedCard(false);
   }
 
+  const handleLogout = path => {
+    if (path === '/') {
+      removeToken()
+      setLoggedIn(false)
+    }
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header onLogout={handleLogout} loggedIn={loggedIn}/>
         <ProtectedRoute exact
                         path="/"
                         loggedIn={loggedIn}
@@ -160,8 +170,8 @@ const App = () => {
         <Route path="/signin">
           <Login handleLogin={handleLogin} />
         </Route>
-        <Route path="/signup" >
-          <Register />
+        <Route path="/signup">
+          <Register/>
         </Route>
         <EditProfilePopup
           onClose={closeAllPopups}

@@ -1,11 +1,15 @@
 import React, {useState} from 'react'
+import * as auth from '../utils/auth'
+import {setToken} from '../utils/token';
+import {useHistory} from 'react-router-dom'
 
 
-const Login = ({onLogin}) => {
+const Login = ({handleLogin}) => {
 	const [data, setData] = useState({
 		email: '',
 		password: ''
 	})
+	const history = useHistory()
 
 	const handleChange = (e) => {
 		const {name, value} = e.target
@@ -15,7 +19,19 @@ const Login = ({onLogin}) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		onLogin(data)
+		const {email, password} = data
+		if (!email || !password) return
+
+		auth.authorize(email, password)
+			.then(data => {
+				if (data.jwt) {
+					setToken(data.jwt)
+					setData({email: '', password: ''})
+					handleLogin(data.user)
+					history.push('/')
+				}
+			})
+			.catch(err => console.log(err))
 	}
 
 	return (
