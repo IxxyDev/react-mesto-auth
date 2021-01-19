@@ -1,9 +1,11 @@
 @import url(./__form/auth__form.css);
-@import url(./__fieldset/auth__fieldset.css);
 @import url(./__input/auth__input.css);
 @import url(./__submit/auth__submit.css);
+@import url(./__link/auth__link.css);
 
 .auth {
 	display: flex;
-	height: 100%;
+	align-items: center;
+	flex-direction: column;
+	padding: 60px 0;
 }

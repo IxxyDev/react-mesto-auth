@@ -1,12 +1,24 @@
 .page {
-    font-family: Inter, Arial, sans-serif;
-    background-color: #000;
-    color: #fff;
-    height: 100%;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    -moz-text-size-adjust: 100%;
-    min-width: 320px;
+	margin: 0 auto;
+	padding: 0 199px;
+	max-width: 1280px;
+	box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+	.page {
+		padding: 0 100px;
+	}
+}
+
+@media (max-width: 768px) {
+	.page {
+		padding: 0 48px;
+	}
+}
+
+@media (max-width: 425px) {
+	.page {
+		padding: 0;
+	}
 }

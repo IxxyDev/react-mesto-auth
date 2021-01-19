@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {Route, useHistory} from 'react-router-dom'
 import * as auth from '../utils/auth'
 import '../index.css';
@@ -36,7 +36,7 @@ const App = () => {
   const [userEmail, setUserEmail] = useState('')
   const history = useHistory()
 
-  React.useEffect(() => {
+  useEffect(() => {
     tokenCheck()
     if (loggedIn) {
       Promise.all([api.getUserInfo(), api.getInitialCards()])
@@ -56,13 +56,9 @@ const App = () => {
     const jwt = getToken()
     if (!jwt) return
     auth.getContent(jwt).then(res => {
-      if (res) {
-        const userData = {
-          email: res.email,
-          password: res.password
-        }
+      if (res.data) {
         setLoggedIn(true)
-        setUserData(userData)
+        setUserEmail(res.data.email)
         history.push('/')
       }
     })
@@ -148,13 +144,15 @@ const App = () => {
     if (path === '/') {
       removeToken()
       setLoggedIn(false)
+      setCurrentUser({})
+      setUserEmail('')
     }
   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header onLogout={handleLogout} loggedIn={loggedIn}/>
+        <Header email={userEmail} onLogout={handleLogout} loggedIn={loggedIn}/>
         <ProtectedRoute exact
                         path="/"
                         loggedIn={loggedIn}
