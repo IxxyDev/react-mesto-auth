@@ -11,6 +11,7 @@ function PopupWithForm({ name, isOpened, title, children, onClose, onSubmit }) {
             onSubmit={onSubmit}
             name={name}
             noValidate
+            method="POST"
           >
             {children}
           </form>
