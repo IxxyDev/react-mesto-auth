@@ -192,8 +192,8 @@ const App = () => {
         <ImagePopup card={image}
                     onClose={closeAllPopups}
                     isOpened={selectedCard} />
-        <Footer />
         <InfoTooltip />
+        <Footer />
       </div>
     </CurrentUserContext.Provider>
   );

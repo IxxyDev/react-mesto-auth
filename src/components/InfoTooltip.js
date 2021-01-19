@@ -16,12 +16,12 @@ const InfoToolTip = () => {
 	}
 
 	return (
-		<div className={cn("popup", opened && "popup_is-opened")}>
+		<section className={cn("popup", opened && "popup_is-opened")}>
 			<div className="popup__content popup__content_type_tooltip">
 				<button onClick={handleClose} className="popup__close-button" />
 				{success}
 			</div>
-		</div>
+		</section>
 		)
 }
 

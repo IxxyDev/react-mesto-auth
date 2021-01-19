@@ -1,0 +1,9 @@
+@import url(./__form/auth__form.css);
+@import url(./__fieldset/auth__fieldset.css);
+@import url(./__input/auth__input.css);
+@import url(./__submit/auth__submit.css);
+
+.auth {
+	display: flex;
+	height: 100%;
+}
