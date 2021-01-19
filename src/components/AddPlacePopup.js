@@ -1,16 +1,15 @@
 import React from 'react';
 import PopupWithForm from './PopupWithForm';
 
-function AddPlacePopup({isOpened, onClose, onAddPlace}) {
-  const inputName = React.useRef();
-  const inputLink = React.useRef();
+const AddPlacePopup = ({isOpened, onClose, onAddPlace}) => {
+  const [name, setName] = React.useState('')
+  const [link, setLink] = React.useState('')
 
   function handleAddPlaceSubmit(e) {
     e.preventDefault();
-    onAddPlace({
-      name: inputName.current.value,
-      link: inputLink.current.value
-    });
+    onAddPlace({name, link});
+    setName('')
+    setLink('')
   }
 
   return (
@@ -25,7 +24,6 @@ function AddPlacePopup({isOpened, onClose, onAddPlace}) {
                            method="POST"
                            noValidate>
                        <input className="popup__input popup__input_type_name"
-                              ref={inputName}
                               defaultValue={''}
                               name="name"
                               type="text"
@@ -36,7 +34,6 @@ function AddPlacePopup({isOpened, onClose, onAddPlace}) {
                               placeholder="Название места"/>
                        <span className='popup__input-error' id='card-name-input-error'></span>
                        <input className="popup__input popup__input_type_description"
-                              ref={inputLink}
                               defaultValue={''}
                               type="url"
                               name="link"
@@ -46,7 +43,7 @@ function AddPlacePopup({isOpened, onClose, onAddPlace}) {
                        <span className='popup__input-error' id='card-url-input-error'></span>
                      </form>
 
-                   } />
+                   }/>
   )
 }
 
