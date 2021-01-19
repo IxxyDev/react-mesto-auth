@@ -22,7 +22,6 @@ import InfoTooltip from "./InfoTooltip";
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false)
   const [registered, setRegistered] = useState(false)
-  const [userData, setUserData] = useState({email: '', password: ''})
   const [isEditProfilePopupOpen, setEditProfilePopup] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopup] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopup] = useState(false);
@@ -33,13 +32,14 @@ const App = () => {
     link: '',
     name: ''
   });
+  const [infoTooltip, setInfoTooltip] = useState()
   const [userEmail, setUserEmail] = useState('')
   const history = useHistory()
 
   useEffect(() => {
     tokenCheck()
     if (loggedIn) {
-      Promise.all([api.getUserInfo(), api.getInitialCards()])
+      Promise.all([auth.getContent({token: getToken()}), api.getInitialCards()])
         .then(([user, cards]) => {
           setCurrentUser(user);
           setCards(cards);
@@ -64,9 +64,26 @@ const App = () => {
     })
   }
 
-  const handleLogin = userData => {
-    setUserData(userData)
-    setLoggedIn(true)
+  const handleLogin = (email, password) => {
+    auth.authorize(email, password)
+      .then(data => {
+        auth.getContent(data)
+          .then(res => setUserEmail(res.data.email))
+        setLoggedIn(true)
+        history.push('/')
+      }).catch(err => {
+      if (err.status === 401) {
+        setInfoTooltip({message: 'Неправильно заполнены поля логина или пароля', image: 'fail', isOpened: true})
+      } else if (err.status === 400) {
+        setInfoTooltip({message: 'Неправильный логин или пароль', image: 'fail', isOpened: true})
+      } else {
+        setInfoTooltip({
+          message: 'Что-то пошло не так! Попробуйте ещё раз',
+          image: 'fail',
+          isOpened: true
+        })
+      }
+    })
   }
 
 

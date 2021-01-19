@@ -13,7 +13,8 @@
 @import url(./__input-error/popup__input-error_active.css);
 @import url(./__tooltip-text/popup__tooltip-text.css);
 @import url(./__content/_type/popup__content_type_tooltip.css);
-@import url(./__tooltip-image/popup__tooltip-image.css);
+@import url(./__icon-succeed/popup__icon-succeed.css);
+@import url(./__icon-fail/popup__icon-fail.css);
 
 .popup {
     position: fixed;
