@@ -1,22 +1,21 @@
 import React, {useState} from 'react'
-import {Link, useHistory} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import '../blocks/auth/auth.css'
 
 
 const Login = ({handleLogin}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    handleLogin({email, password})
+    handleLogin(email, password)
   }
 
   return (
     <div className="auth">
       <h2 className="auth__heading">Вход</h2>
-      <form onSubmit={handleSubmit} className="auth__form">
+      <form onSubmit={handleSubmit} className="auth__form" autoComplete="off" noValidate>
         <input onChange={e => setEmail(e.target.value)}
                name="email"
                type="email"

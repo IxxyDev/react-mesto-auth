@@ -10,7 +10,7 @@ const Header = ({email, loggedIn, onLogout}) => {
 
   return (
     <header className="header">
-      <Link to="/" classname="header__home-link">
+      <Link to="/" className="header__home-link">
         <img className="logo" src={logoPath} alt="Логотип проекта 'Место'"/>
       </Link>
       {loggedIn ? (

@@ -1,4 +1,4 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Route, useHistory} from 'react-router-dom'
 import * as auth from '../utils/auth'
 import '../index.css';
@@ -10,9 +10,9 @@ import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import AddPlacePopup from './AddPlacePopup';
 import EditAvatarPopup from './EditAvatarPopup';
-import { api } from '../utils/Api';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import {getToken, removeToken, setToken} from "../utils/token";
+import {api} from '../utils/Api';
+import {CurrentUserContext} from '../contexts/CurrentUserContext';
+import {removeToken, setToken} from "../utils/token";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
@@ -21,7 +21,6 @@ import InfoTooltip from "./InfoTooltip";
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false)
-  const [registered, setRegistered] = useState(false)
   const [isEditProfilePopupOpen, setEditProfilePopup] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopup] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopup] = useState(false);
@@ -32,14 +31,13 @@ const App = () => {
     link: '',
     name: ''
   });
-  const [infoTooltip, setInfoTooltip] = useState()
+  const [infoTooltip, setInfoTooltip] = useState({image: '', isOpened: false, message: ''})
   const [userEmail, setUserEmail] = useState('')
   const history = useHistory()
 
   useEffect(() => {
-    tokenCheck()
     if (loggedIn) {
-      Promise.all([auth.getContent({token: getToken()}), api.getInitialCards()])
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([user, cards]) => {
           setCurrentUser(user);
           setCards(cards);
@@ -50,31 +48,41 @@ const App = () => {
     }
   }, [loggedIn]);
 
-  //const handleSetUserEmail = useCallback(email => setUserEmail(email), [])
-
   const tokenCheck = () => {
-    const jwt = getToken()
-    if (!jwt) return
-    auth.getContent(jwt).then(res => {
-      if (res.data) {
-        setLoggedIn(true)
-        setUserEmail(res.data.email)
-        history.push('/')
-      }
-    })
+    if (localStorage.token) {
+      auth.getContent(localStorage.token)
+        .then(res => {
+          if (res.data) {
+            setLoggedIn(true)
+            setUserEmail(res.data.email)
+            history.push('/')
+          } else {
+            removeToken()
+            setLoggedIn(false)
+            setCurrentUser({})
+            setUserEmail('')
+          }
+        })
+    }
   }
 
   const handleLogin = (email, password) => {
     auth.authorize(email, password)
       .then(data => {
-        auth.getContent(data)
-          .then(res => setUserEmail(res.data.email))
-        setLoggedIn(true)
-        history.push('/')
+        if (data.token) {
+          setToken(data.token)
+          setLoggedIn(true)
+          tokenCheck()
+        }
       }).catch(err => {
-      if (err.status === 401) {
-        setInfoTooltip({message: 'Неправильно заполнены поля логина или пароля', image: 'fail', isOpened: true})
-      } else if (err.status === 400) {
+        debugger
+      if (err.response.status === 401) {
+        setInfoTooltip({
+          message: 'Некорректно заполнено одно из полей',
+          image: 'fail',
+          isOpened: true
+        })
+      } else if (err.response.status === 400) {
         setInfoTooltip({message: 'Неправильный логин или пароль', image: 'fail', isOpened: true})
       } else {
         setInfoTooltip({
@@ -86,6 +94,35 @@ const App = () => {
     })
   }
 
+  const handleRegister = (email, password) => {
+    auth.register(email, password)
+      .then(res => {
+        if (res.data) {
+          setInfoTooltip({
+            message: 'Вы успешно зарегистрировались!',
+            image: 'succeed',
+            isOpened: true
+          })
+          history.push('/signin')
+        }
+      }).catch(err => {
+      if (err.response.status === 400) {
+        setInfoTooltip({
+          message: 'Некорректно заполнено одно из полей',
+          image: 'fail',
+          isOpened: true
+        })
+      } else if (err.response.status === 409) {
+        setInfoTooltip({message: 'Вы уже зарегистрированы', image: 'fail', isOpened: true})
+      } else {
+        setInfoTooltip({
+          message: 'Что-то пошло не так! Попробуйте ещё раз',
+          image: 'fail',
+          isOpened: true
+        })
+      }
+    })
+  }
 
   const handleLikeCard = card => {
     const isLiked = card.likes.some(owner => owner._id === currentUser._id);
@@ -155,15 +192,14 @@ const App = () => {
     setEditProfilePopup(false);
     setAddPlacePopup(false);
     setSelectedCard(false);
+    setInfoTooltip({...infoTooltip, isOpened: false})
   }
 
-  const handleLogout = path => {
-    if (path === '/') {
+  const handleLogout = () => {
       removeToken()
       setLoggedIn(false)
       setCurrentUser({})
       setUserEmail('')
-    }
   }
 
   return (
@@ -183,10 +219,10 @@ const App = () => {
                         cards={cards}
         />
         <Route path="/signin">
-          <Login handleLogin={handleLogin} />
+          <Login handleLogin={handleLogin}/>
         </Route>
         <Route path="/signup">
-          <Register/>
+          <Register handleRegister={handleRegister}/>
         </Route>
         <EditProfilePopup
           onClose={closeAllPopups}
@@ -203,12 +239,16 @@ const App = () => {
           isOpened={isAddPlacePopupOpen}
           onAddPlace={handleAddPlace}
         />
-        <PopupWithForm title="Вы уверены?" name="delete-card" btnText={'Да'} />
+        <PopupWithForm title="Вы уверены?" name="delete-card" btnText={'Да'}/>
         <ImagePopup card={image}
                     onClose={closeAllPopups}
-                    isOpened={selectedCard} />
-        <InfoTooltip />
-        <Footer />
+                    isOpened={selectedCard}/>
+        <InfoTooltip image={infoTooltip.image}
+                     isOpened={infoTooltip.isOpened}
+                     onClose={closeAllPopups}
+                     message={infoTooltip.message}
+        />
+        <Footer/>
       </div>
     </CurrentUserContext.Provider>
   );
