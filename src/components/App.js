@@ -12,7 +12,7 @@ import AddPlacePopup from './AddPlacePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import {api} from '../utils/api';
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
-import {removeToken, setToken} from "../utils/token";
+import {getToken, removeToken, setToken} from "../utils/token";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
@@ -36,6 +36,10 @@ const App = () => {
   const history = useHistory()
 
   useEffect(() => {
+    tokenCheck()
+  }, [])
+
+  useEffect(() => {
     if (loggedIn) {
       Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([user, cards]) => {
@@ -49,8 +53,8 @@ const App = () => {
   }, [loggedIn]);
 
   const tokenCheck = () => {
-    if (localStorage.token) {
-      auth.getContent(localStorage.token)
+    if (getToken()) {
+      auth.getContent(getToken())
         .then(res => {
           if (res.data) {
             setLoggedIn(true)
@@ -72,18 +76,16 @@ const App = () => {
         if (data.token) {
           setToken(data.token)
           setLoggedIn(true)
-          history.push('/')
           tokenCheck()
         }
       }).catch(err => {
-        debugger
-      if (err.response.status === 401) {
+      if (err.status === 401) {
         setInfoTooltip({
           message: 'Некорректно заполнено одно из полей',
           image: 'fail',
           isOpened: true
         })
-      } else if (err.response.status === 400) {
+      } else if (err.status === 400) {
         setInfoTooltip({message: 'Неправильный логин или пароль', image: 'fail', isOpened: true})
       } else {
         setInfoTooltip({
@@ -107,13 +109,13 @@ const App = () => {
           history.push('/signin')
         }
       }).catch(err => {
-      if (err.response.status === 400) {
+      if (err.status === 400) {
         setInfoTooltip({
           message: 'Некорректно заполнено одно из полей',
           image: 'fail',
           isOpened: true
         })
-      } else if (err.response.status === 409) {
+      } else if (err.status === 409) {
         setInfoTooltip({message: 'Вы уже зарегистрированы', image: 'fail', isOpened: true})
       } else {
         setInfoTooltip({
