@@ -1,7 +1,6 @@
 import React from 'react';
 
 const PopupWithForm = ({ name, isOpened, title, children, onClose, onSubmit }) => {
-
   return (
       <section className={`popup popup_type_${name} ${isOpened && "popup_is-opened"}`}>
         <div className="popup__content">

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ImagePopup({ isOpened, card, onClose }) {
+const ImagePopup = ({ isOpened, card, onClose }) => {
    return (
       <section className={`popup popup_type_zoom-image ${isOpened && "popup_is-opened"}`}>
         <figure className="popup__image-container">
