@@ -11,7 +11,7 @@ const PopupWithForm = ({ name, isOpened, title, children, onClose, onSubmit }) =
             onSubmit={onSubmit}
             name={name}
             noValidate
-            method="POST"
+            method="PATCH"
           >
             {children}
           </form>

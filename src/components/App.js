@@ -73,6 +73,7 @@ const App = () => {
   const handleLogin = (email, password) => {
     auth.authorize(email, password)
       .then(data => {
+        console.debug(data)
         if (data.token) {
           setToken(data.token)
           setLoggedIn(true)
