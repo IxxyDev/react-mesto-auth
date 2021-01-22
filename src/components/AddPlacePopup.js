@@ -23,6 +23,7 @@ const AddPlacePopup = ({isOpened, onClose, onAddPlace}) => {
       <input
         className="popup__input popup__input_type_name"
         value={name}
+        onChange={e => setName(e.target.value)}
         name="name"
         type="text"
         id="card-name-input"
@@ -34,13 +35,14 @@ const AddPlacePopup = ({isOpened, onClose, onAddPlace}) => {
       <input
         className="popup__input popup__input_type_description"
         value={link}
+        onChange={e => setLink(e.target.value)}
         type="url"
         name="link"
         id="card-url-input"
         required placeholder="Ссылка на картинку"
         pattern=".+\.(jpg|png)"/>
       <span className='popup__input-error' id='card-url-input-error'></span>
-      <button type="submit" className="popup__button"></button>
+      <button type="submit" className="popup__button">Создать</button>
     </PopupWithForm>
   )
 }

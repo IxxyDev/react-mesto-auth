@@ -10,7 +10,7 @@ import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import AddPlacePopup from './AddPlacePopup';
 import EditAvatarPopup from './EditAvatarPopup';
-import {api} from '../utils/Api';
+import {api} from '../utils/api';
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
 import {removeToken, setToken} from "../utils/token";
 import ProtectedRoute from "./ProtectedRoute";
@@ -21,9 +21,9 @@ import InfoTooltip from "./InfoTooltip";
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false)
-  const [isEditProfilePopupOpen, setEditProfilePopup] = useState(false);
-  const [isAddPlacePopupOpen, setAddPlacePopup] = useState(false);
-  const [isEditAvatarPopupOpen, setEditAvatarPopup] = useState(false);
+  const [isEditProfilePopupOpened, setIsEditProfilePopupOpened] = useState(false);
+  const [isAddPlacePopupOpened, setIsAddPlacePopupOpened] = useState(false);
+  const [isEditAvatarPopupOpened, setIsEditAvatarPopupOpened] = useState(false);
   const [selectedCard, setSelectedCard] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
@@ -72,6 +72,7 @@ const App = () => {
         if (data.token) {
           setToken(data.token)
           setLoggedIn(true)
+          history.push('/')
           tokenCheck()
         }
       }).catch(err => {
@@ -145,7 +146,7 @@ const App = () => {
 
   const handleUpdateUser = userData => {
     api.changeUserInfo(userData)
-      .then((userInfo) => {
+      .then(userInfo => {
         setCurrentUser(userInfo);
         closeAllPopups();
       })
@@ -171,15 +172,15 @@ const App = () => {
   }
 
   const handleEditAvatarClick = () => {
-    setEditAvatarPopup(true);
+    setIsEditAvatarPopupOpened(true);
   }
 
   const handleEditProfileClick = () => {
-    setEditProfilePopup(true);
+    setIsEditProfilePopupOpened(true);
   }
 
   const handleAddPlaceClick = () => {
-    setAddPlacePopup(true);
+    setIsAddPlacePopupOpened(true);
   }
 
   const handleCardClick = ({link, name}) => {
@@ -188,9 +189,9 @@ const App = () => {
   }
 
   const closeAllPopups = () => {
-    setEditAvatarPopup(false);
-    setEditProfilePopup(false);
-    setAddPlacePopup(false);
+    setIsEditAvatarPopupOpened(false);
+    setIsEditProfilePopupOpened(false);
+    setIsAddPlacePopupOpened(false);
     setSelectedCard(false);
     setInfoTooltip({...infoTooltip, isOpened: false})
   }
@@ -226,17 +227,17 @@ const App = () => {
         </Route>
         <EditProfilePopup
           onClose={closeAllPopups}
-          isOpened={isEditProfilePopupOpen}
+          isOpened={isEditProfilePopupOpened}
           onUpdateUser={handleUpdateUser}
         />
         <EditAvatarPopup
           onClose={closeAllPopups}
-          isOpened={isEditAvatarPopupOpen}
+          isOpened={isEditAvatarPopupOpened}
           onUpdateAvatar={handleUpdateAvatar}
         />
         <AddPlacePopup
           onClose={closeAllPopups}
-          isOpened={isAddPlacePopupOpen}
+          isOpened={isAddPlacePopupOpened}
           onAddPlace={handleAddPlace}
         />
         <PopupWithForm title="Вы уверены?" name="delete-card" btnText={'Да'}/>

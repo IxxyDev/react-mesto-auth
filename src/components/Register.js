@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Link, useHistory} from "react-router-dom";
+import {Link} from "react-router-dom";
 import '../blocks/auth/auth.css'
 
 

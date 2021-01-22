@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PopupWithForm from './PopupWithForm';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
@@ -6,13 +6,11 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 const EditProfilePopup = ({isOpened, onClose, onUpdateUser}) => {
   const currentUser = React.useContext(CurrentUserContext);
 
-  const [name, setName] = React.useState('');
-  const [description, setDescription] = React.useState('');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   const handleNameChange = e => setName(e.target.value)
   const handleAboutChange = e => setDescription(e.target.value);
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onUpdateUser({
@@ -21,7 +19,7 @@ const EditProfilePopup = ({isOpened, onClose, onUpdateUser}) => {
     });
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about);
   }, [currentUser]);
@@ -58,6 +56,7 @@ const EditProfilePopup = ({isOpened, onClose, onUpdateUser}) => {
                  required minLength="2"
                  maxLength="200" />
           <span className='popup__input-error' id='description-input-error'></span>
+          <button type="submit" className="popup__button">Сохранить</button>
         </form>
       } />
   );

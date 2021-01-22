@@ -1,10 +1,9 @@
 import React from 'react';
 import logoPath from "../images/logo.svg";
-import {Link, useHistory, useLocation} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 
 const Header = ({email, loggedIn, onLogout}) => {
   const location = useLocation()
-  const history = useHistory()
   const title = `${location.pathname === "/signup" ? "Войти" : "Регистрация"}`
   const path = `${location.pathname === "/signup" ? "signin" : "signup"}`
 
