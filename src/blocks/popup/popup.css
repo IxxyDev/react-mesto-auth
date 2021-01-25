@@ -31,6 +31,7 @@
     align-items: center;
     visibility: hidden;
     opacity: 0;
+    z-index: 3;
     -moz-transition: visibility 0.5s, opacity 0.5s linear;
     -webkit-transition: visibility 0.5s, opacity 0.5s linear;
     -o-transition: visibility 0.5s, opacity 0.5s linear;
