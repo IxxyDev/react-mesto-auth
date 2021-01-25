@@ -22,14 +22,14 @@ const Register = ({handleRegister}) => {
                  className="auth__input"
                  required
                  placeholder="Email"
-                 defaultValue={email}/>
+                 value={email}/>
           <input onChange={e => setPassword(e.target.value)}
                  name="password"
                  type="password"
                  className="auth__input"
                  required
                  placeholder="Пароль"
-                 defaultValue={password}/>
+                 value={password}/>
           <button type="submit" className="auth__submit">Зарегистрироваться</button>
           <Link to="login" className="auth__link">Уже зарегистрированы? Войти</Link>
       </form>

@@ -33,7 +33,7 @@ const EditProfilePopup = ({isOpened, onClose, onUpdateUser}) => {
       onSubmit={handleSubmit}
     >
       <input className="popup__input popup__input_type_name"
-             defaultValue={name}
+             value={name}
              onChange={handleNameChange}
              name="name"
              type="text"
@@ -44,7 +44,7 @@ const EditProfilePopup = ({isOpened, onClose, onUpdateUser}) => {
              pattern="[a-zA-ZА-ЯЁа-яё\s\-]+[^\s\-]+"/>
       <span className='popup__input-error' id='name-input-error'></span>
       <input className="popup__input popup__input_type_description"
-             defaultValue={description}
+             value={description}
              onChange={handleAboutChange}
              name="description"
              type="text"

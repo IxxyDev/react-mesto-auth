@@ -1,22 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import PopupWithForm from "./PopupWithForm";
-import {CurrentUserContext} from '../contexts/CurrentUserContext';
 
 const EditAvatarPopup = ({isOpened, onClose, onUpdateAvatar}) => {
-  const currentUser = React.useContext(CurrentUserContext);
-  const avatarRef = React.useRef();
   const [imgLink, setImgLink] = useState('')
 
-  useEffect(() => {
-    avatarRef.current.value = currentUser.avatar;
-  }, [currentUser]);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    onUpdateAvatar({
-        avatar: avatarRef.current.value
-      }
-    );
+  const handleSubmit = e => {
+    e.preventDefault()
+    onUpdateAvatar({avatar: imgLink})
   }
 
   return (
@@ -28,8 +18,7 @@ const EditAvatarPopup = ({isOpened, onClose, onUpdateAvatar}) => {
       onSubmit={handleSubmit}
     >
       <input className="popup__input popup__input_type_description"
-             defaultValue={imgLink}
-             ref={avatarRef}
+             value={imgLink}
              type="url"
              name="link"
              id="avatar-url-input"
