@@ -24,7 +24,9 @@ const Main = ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike
       </section>
       <section className="elements">
         {cards.map((card, i) =>
-          <Card key={card._id} onCardClick={onCardClick} onCardLike={onCardLike} onCardDelete={onCardDelete} card={card}/>
+          (
+            <Card key={card._id} onCardClick={onCardClick} onCardLike={onCardLike} onCardDelete={onCardDelete} card={card}/>
+          )
         )}
       </section>
     </main>
